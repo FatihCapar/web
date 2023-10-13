@@ -9,21 +9,56 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css" >
         <script src="js/script.js"></script>
-        
+
     </head>
 
     <body>
-        <h1>hoo</h1>
-        <h2>hhh</h2>
-        <div>
-            <input type="text" value="" id="search">
-            <button onclick="get_movie_result()">On click get</button>
+
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" >Suche</h5>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" value="tarzan" id="search">
+                    <hr>
+                    <button onclick="get_movie_result()" class="btn btn-success">Suchen</button>
+                </div>
+                <div class="modal-footer">
+                    
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" >Ergebniss</h5>
+              </div>
+              <div class="modal-body">
+                <table>
+                    <head>
+                        <tr>
+                            <td> Title </td>
+                            <td>Year</td>
+                            <td>Poster</td>
+                            <td>Poster</td>
+                        </tr>
+                    </head>
+                    ><body>
+                        
+                    </body>
+                </table>
+                    <p class="jason">The content is </p>
+
+              </div>
+              <div class="modal-footer">
+                  
+              </div>
+            </div>
+          </div>
         </div>
-        <div>
-          <p class="jason">The content is </p>
-          <ul id="msg">
-          </ul>
-        <div>
                 <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="js/jquery-3.2.1.slim.min.js" ></script>
