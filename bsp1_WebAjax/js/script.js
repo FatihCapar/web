@@ -31,7 +31,7 @@ function split_jason(myArray){
     $("#movieresult tbody").empty();
     for(var x =0; x < myArray.length; x++){
       var poster= "";
-      if(myArray[x].hasOwnProperty("Poster") && myArray[x].Poster != "N/A") poster ="<img class -'img-fluid' style='max-width: 100%; height: auto;' src='" + myArray[x].Poster + "'><br>";
+      if(myArray[x].hasOwnProperty("Poster") && myArray[x].Poster != "N/A") poster ="<img class='img-fluid' style='max-width: 100%; height: auto;' src='" + myArray[x].Poster + "'><br>";
       var newRowContent = "<tr><td>" + myArray[x].Title + "</td><td>" + myArray[x].Year +"<td><td>" + poster +"</td><tr>";
       $("#movieresult tbody").append(newRowContent);
     }
