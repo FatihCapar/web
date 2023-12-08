@@ -4,6 +4,18 @@ var favoriteMovies = [];
 var currentPage = 1;
 var totalResults = 0;
 var searchResults = [];
+var apiKey = localStorage.getItem('apiKey') || "";
+
+function updateApiKey() {
+  var apiKey = $("#apiKeyInput").val();
+
+  if (apiKey) {
+    localStorage.setItem('apiKey', apiKey);
+    alert("API-Schlüssel wurde aktualisiert!");
+  } else {
+    alert("API-Schlüssel darf nicht leer sein!");
+  }
+}
 
 $(document).ready(function() {
   loadFavorites();
@@ -15,43 +27,62 @@ function showResults() {
   var endIndex = startIndex + dataPerPage;
   var resultsToDisplay = searchResults.slice(startIndex, endIndex);
 
+  console.log("currentPage:", currentPage);
+  console.log("totalResults:", totalResults);
+  console.log("startIndex:", startIndex);
+  console.log("endIndex:", endIndex);
+  console.log("resultsToDisplay:", resultsToDisplay);
+
+  console.log("Before split_jason call");
   split_jason(resultsToDisplay);
+  console.log("After split_jason call");
 }
 
 async function nextPage() {
-  
   if ((currentPage * dataPerPage) < totalResults) {
-    currentPage++;
-    await loadResultsPage(currentPage);
-    showResults();
+      if (!apiKey) {
+          alert("Bitte geben Sie einen gültigen API-Schlüssel ein.");
+          return;
+      }
+      currentPage++;
+      console.log("Going to next page. New currentPage:", currentPage);
+      await loadResultsPage(currentPage);
+      showResults();
   }
 }
 
+// Funktion zum Laden der Suchergebnisse basierend auf der Seite
 async function loadResultsPage(page) {
   var search = $("#search").val();
   if (search != null || search != "") {
-    try {
-      var response = await $.ajax({
-        url: "http://www.omdbapi.com/?s=" + search + "&r=json&apikey=2279b9f1&page=" + page,
-        dataType: 'json'
-      });
-      if (response.hasOwnProperty("Response") && response.Response == "True") {
-        totalResults = parseInt(response.totalResults) || 0;
-        searchResults = searchResults.concat(response.Search || []);
-      } else {
-        console.error("Error in API response:", response.Error);
+      try {
+          console.log("Loading results for page:", page);
+          if (!apiKey) {
+              alert("Bitte geben Sie einen gültigen API-Schlüssel ein.");
+              return;
+          }
+          var response = await $.ajax({
+              url: "http://www.omdbapi.com/?s=" + search + "&r=json&apikey=" + apiKey + "&page=" + page,
+              dataType: 'json'
+          });
+          console.log("API response:", response);
+          if (response.hasOwnProperty("Response") && response.Response == "True") {
+              totalResults = parseInt(response.totalResults) || 0;
+              searchResults = searchResults.concat(response.Search || []);
+          } else {
+              console.error("Error in API response:", response.Error);
+          }
+      } catch (error) {
+          console.error("Error making API request:", error);
       }
-    } catch (error) {
-      console.error("Error making API request:", error);
-    }
   }
 }
-
 
 
 function prevPage() {
   if (currentPage > 1) {
     currentPage--;
+    console.log("Going to previous page. New currentPage:", currentPage);
     showResults();
   }
 }
@@ -62,13 +93,13 @@ function get_movie_result() {
   var search = $("#search").val();
   if (search != null || search != "") {
     $.ajax({
-      url: "http://www.omdbapi.com/?s=" + search + "&r=json&apikey=2279b9f1",
+      url: "http://www.omdbapi.com/?s=" + search + "&r=json&apikey=" + apiKey,
       dataType: 'json',
       success: function (data) {
         if (data.hasOwnProperty("Response") && data.Response == "True") {
           totalResults = parseInt(data.totalResults) || 0;
           searchResults = data.Search || [];
-          
+        
           showResults();
         }
       },
@@ -80,14 +111,16 @@ function get_movie_result() {
 }
 
 async function split_jason(myArray) {
+  console.log("split_jason function called");
+  console.log("myArray:", myArray);
   if (check_Array(myArray)) {
     $("#movieresult tbody").empty();
     for (var x = 0; x < myArray.length; x++) {
       var poster = "";
-      var plot = "N/A";
-      var rating = "N/A";
-      var genre = "N/A";
-      var year = "N/A";
+      var plot = "N/A"; 
+      var rating = "N/A"; 
+      var genre = "N/A"; 
+      var year = "N/A"; 
 
       if (myArray[x].hasOwnProperty("Poster") && myArray[x].Poster != "N/A") poster = "<img class='img-fluid' style='max-width: 100%; height: auto;' src='" + myArray[x].Poster + "'><br>";
 
@@ -142,11 +175,11 @@ function convertToStars(rating) {
   var starRating = "";
 
   for (var i = 0; i < fullStars; i++) {
-    starRating += "<i class='bi bi-star-fill'></i>";
+    starRating += "<i class='bi bi-star-fill'></i>"; 
   }
 
   if (halfStar) {
-    starRating += "<i class='bi bi-star-half'></i>";
+    starRating += "<i class='bi bi-star-half'></i>"; 
   }
 
   return starRating;
@@ -155,7 +188,7 @@ function convertToStars(rating) {
 function addToFavorites(imdbID) {
   if (favoriteMovies.indexOf(imdbID) === -1) {
     favoriteMovies.push(imdbID);
-    saveFavorites();
+    saveFavorites(); 
     alert("Film zu Favoriten hinzugefügt!");
   } else {
     alert("Film ist bereits in den Favoriten!");
@@ -176,7 +209,7 @@ function loadFavorites() {
 async function getPlotData(imdbID) {
   try {
     return await $.ajax({
-      url: "http://www.omdbapi.com/?i=" + imdbID + "&plot=short&r=json&apikey=2279b9f1",
+      url: "http://www.omdbapi.com/?i=" + imdbID + "&plot=short&r=json&apikey="+apiKey,
       dataType: 'json'
     });
   } catch (error) {
@@ -188,7 +221,7 @@ async function getPlotData(imdbID) {
 async function getRatingData(imdbID) {
   try {
     return await $.ajax({
-      url: "http://www.omdbapi.com/?i=" + imdbID + "&r=json&apikey=2279b9f1",
+      url: "http://www.omdbapi.com/?i=" + imdbID + "&r=json&apikey=" +apiKey,
       dataType: 'json'
     });
   } catch (error) {
@@ -200,7 +233,7 @@ async function getRatingData(imdbID) {
 async function getDetailData(imdbID) {
   try {
     return await $.ajax({
-      url: "http://www.omdbapi.com/?i=" + imdbID + "&r=json&apikey=2279b9f1",
+      url: "http://www.omdbapi.com/?i=" + imdbID + "&r=json&apikey="+apiKey,
       dataType: 'json'
     });
   } catch (error) {
@@ -215,7 +248,7 @@ function showFavorites() {
   async function loadDetails(imdbID) {
     try {
       return await $.ajax({
-        url: "http://www.omdbapi.com/?i=" + imdbID + "&plot=short&r=json&apikey=2279b9f1",
+        url: "http://www.omdbapi.com/?i=" + imdbID + "&plot=short&r=json&apikey="+apiKey,
         dataType: 'json'
       });
     } catch (error) {
@@ -290,7 +323,7 @@ function generateYearBadges(year) {
 
   return badges.join('');
 }
-
+    
 
       $("#favoritesList").append(listItem);
     }
@@ -306,8 +339,8 @@ function removeFromFavorites(imdbID) {
   var index = favoriteMovies.indexOf(imdbID);
   if (index !== -1) {
     favoriteMovies.splice(index, 1);
-    saveFavorites();
-    showFavorites();
+    saveFavorites(); 
+    showFavorites(); 
     alert("Film aus Favoriten entfernt!");
   } else {
     alert("Film nicht in den Favoriten gefunden!");
@@ -346,8 +379,8 @@ function getUserStarRating(imdbID) {
 }
 function clearAllFavorites() {
   favoriteMovies = [];
-  saveFavorites();
-  showFavorites();
+  saveFavorites(); 
+  showFavorites(); 
   alert("Alle Filme aus Favoriten entfernt!");
 }
 
@@ -359,13 +392,3 @@ function resetAllRatings() {
   showFavorites(); 
   alert("Alle Bewertungen zurückgesetzt!");
 }
-
-
-
-
-
-
-
-
-
-

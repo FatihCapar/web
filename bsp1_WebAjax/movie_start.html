@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <title>Hello jQuery</title>
-
+    
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -47,6 +46,9 @@
                             </div>
                             <div class="modal-body">
                                 <ul id="favoritesList">
+
+                                    <!-- El Favorite -->
+                                    
                                     <div class="modal-content" >
                                         <div class="modal-header">
                                             <h5 class="modal-title" >Ergebniss</h5>
@@ -112,6 +114,34 @@
                 </table>
             </div>
             <div class="modal-footer">
+
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#apiKeyModal">
+                    API Key ändern
+                  </button>
+                <!-- API Key Modal -->
+                <div class="modal fade" id="apiKeyModal" tabindex="-1" role="dialog" aria-labelledby="apiKeyModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="apiKeyModalLabel">API Key ändern</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <p>Hier kannst du deinen API Key ändern:</p>
+                          <input type="text" id="apiKeyInput" class="form-control" value="your_api_key_here" style="width: 150px; background-color: #555555; color: #ffffff; border: none;">
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
+                          <button type="button" class="btn btn-primary" onclick="updateApiKey()">Aktualisieren</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                
                 <button class="btn btn-secondary" onclick="prevPage()">Vorherige Seite</button>
     <button class="btn btn-secondary" onclick="nextPage()">Nächste Seite</button>
             </div>
