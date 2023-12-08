@@ -1,11 +1,8 @@
 /* Custom CSS */
 
-/* Modalfenster */
 .modal-xl {
     max-width: 70%;
 }
-
-/* Tabelle im Modal */
 #movieresult {
     width: 100%;
     border-collapse: collapse;
@@ -15,7 +12,7 @@
 #movieresult th, #movieresult td {
     border: 1px solid #ddd;
     padding: 12px;
-    text-align: left;
+    text-align: center;
 }
 
 #movieresult thead tr {
@@ -26,13 +23,9 @@
 #movieresult tbody tr:nth-child(even) {
     background-color: #f9f9f9;
 }
-
-/* Schließen-Schaltfläche */
 .close {
     color: #007bff;
 }
-
-/* Sucheingabe und Suchen-Schaltfläche */
 #search {
     border-radius: 5px;
     padding: 10px;
@@ -42,30 +35,28 @@
     border-radius: 5px;
     margin-left: 10px;
 }
-
-/* Favoriten anzeigen-Schaltfläche */
 .btn-favorites {
     border-radius: 5px;
     margin-left: 10px;
     background-color: #28a745;
     color: #fff;
 }
-/* Poster in der Favoritenliste */
 #favoritesList img {
-    max-width: 90%; /* Ändern Sie dies entsprechend Ihrer gewünschten Größe */
-    max-height: 90%; /* Ändern Sie dies entsprechend Ihrer gewünschten Größe */
+    max-width: 50%; 
+    max-height: 50%; 
 }
-/* Entfernen des Borders für das Modalfenster */
+
 .modal-content {
     border: none !important;
 }
-/* In deiner CSS-Datei, z.B., styles.css */
 
 #favoritesModal .modal-content {
     background-color: #a8a8a8;
 }
-/* In deiner CSS-Datei, z.B., styles.css */
 
 #favoritesList li {
     background-color: #8c9287;
+}
+.badge {
+    font-weight: bold;
 }

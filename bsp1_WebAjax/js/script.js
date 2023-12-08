@@ -11,6 +11,7 @@ function updateApiKey() {
 
   if (apiKey) {
     localStorage.setItem('apiKey', apiKey);
+    location.reload();
     alert("API-Schlüssel wurde aktualisiert!");
   } else {
     alert("API-Schlüssel darf nicht leer sein!");
@@ -91,6 +92,18 @@ function prevPage() {
 function get_movie_result() {
   currentPage = 1;
   var search = $("#search").val();
+  var apiKey = localStorage.getItem('apiKey');
+
+  if (!apiKey) {
+    alert("Bitte geben Sie einen gültigen API-Schlüssel ein.");
+    return;
+  }
+
+  if (!search || search.trim() === "") {
+    alert("Bitte geben Sie einen Suchbegriff ein.");
+    return;
+  }
+
   if (search != null || search != "") {
     $.ajax({
       url: "http://www.omdbapi.com/?s=" + search + "&r=json&apikey=" + apiKey,
@@ -122,7 +135,7 @@ async function split_jason(myArray) {
       var genre = "N/A"; 
       var year = "N/A"; 
 
-      if (myArray[x].hasOwnProperty("Poster") && myArray[x].Poster != "N/A") poster = "<img class='img-fluid' style='max-width: 100%; height: auto;' src='" + myArray[x].Poster + "'><br>";
+      if (myArray[x].hasOwnProperty("Poster") && myArray[x].Poster != "N/A") poster = "<img class='img-fluid' style='max-width: auto; height: auto;' src='" + myArray[x].Poster + "'><br>";
 
       if (myArray[x].hasOwnProperty("imdbID")) {
         await getPlotData(myArray[x].imdbID).then((plotData) => {
@@ -206,41 +219,37 @@ function loadFavorites() {
   }
 }
 
-async function getPlotData(imdbID) {
+async function fetchData(imdbID, plot = false) {
+  let plotParam = "";
+  if (plot) {
+    plotParam = "&plot=short";
+  }
+
+  const url = `http://www.omdbapi.com/?i=${imdbID}&r=json${plotParam}&apikey=${apiKey}`;
+
   try {
     return await $.ajax({
-      url: "http://www.omdbapi.com/?i=" + imdbID + "&plot=short&r=json&apikey="+apiKey,
+      url,
       dataType: 'json'
     });
   } catch (error) {
-    console.error("Error fetching plot data: ", error);
+    console.error(`Error fetching ${plot ? 'plot' : 'detail'} data: `, error);
     return {};
   }
+}
+
+async function getPlotData(imdbID) {
+  return await fetchData(imdbID, true);
 }
 
 async function getRatingData(imdbID) {
-  try {
-    return await $.ajax({
-      url: "http://www.omdbapi.com/?i=" + imdbID + "&r=json&apikey=" +apiKey,
-      dataType: 'json'
-    });
-  } catch (error) {
-    console.error("Error fetching rating data: ", error);
-    return {};
-  }
+  return await fetchData(imdbID);
 }
 
 async function getDetailData(imdbID) {
-  try {
-    return await $.ajax({
-      url: "http://www.omdbapi.com/?i=" + imdbID + "&r=json&apikey="+apiKey,
-      dataType: 'json'
-    });
-  } catch (error) {
-    console.error("Error fetching detail data: ", error);
-    return {};
-  }
+  return await fetchData(imdbID);
 }
+
 
 function showFavorites() {
   $("#favoritesList").empty();
@@ -258,60 +267,85 @@ function showFavorites() {
   }
 
   async function addToFavoritesList(imdbID) {
-    var favoriteMovie = favoriteMovies.find(function(movie) {
-      return movie === imdbID;
-    });
-  
-    if (favoriteMovie) {
-      var details = await loadDetails(imdbID);
-  
-      var starRating = convertToStars(details.imdbRating || 'N/A');
-      var userStarRating = getUserStarRating(imdbID);
+    if (favoriteMovies.includes(imdbID)) {
+      const details = await loadDetails(imdbID);
+      const starRating = convertToStars(details.imdbRating || 'N/A');
+      const userStarRating = getUserStarRating(imdbID);
 
-      var starRatingInput =
-      "<div class='mb-3'>" +
-        "<label for='userStarRating_" + imdbID + "' class='form-label'>Deine Bewertung:</label>" +
-        "<select class='form-select' id='userStarRating_" + imdbID + "'>" +
-          "<option value='1'>1 Stern</option>" +
-          "<option value='2'>2 Sterne</option>" +
-          "<option value='3'>3 Sterne</option>" +
-          "<option value='4'>4 Sterne</option>" +
-          "<option value='5'>5 Sterne</option>" +
-          "<option value='6'>6 Sterne</option>" +
-          "<option value='7'>7 Sterne</option>" +
-          "<option value='8'>8 Sterne</option>" +
-          "<option value='9'>9 Sterne</option>" +
-          "<option value='10'>10 Sterne</option>" +
-        "</select>" +
-        "<button class='btn btn-primary mt-2' onclick='submitUserRating(\"" + imdbID + "\")'>Bewertung abschicken</button>" +
-      "</div>";
+      const starRatingInput = `
+        <div class='mb-3 '>
+          <label for='userStarRating_${imdbID}' class='form-label'>Deine Bewertung:</label>
+          <select class='form-select' id='userStarRating_${imdbID}'>
+            ${generateStarRatingOptions()}
+          </select>
+          <button class='btn btn-primary mt-2' onclick='submitUserRating("${imdbID}")'>Bewertung abschicken</button>
+        </div>
+      `;
+
 
       // (#8c9287)
       var listItem =
       "<li class='mb-3 border rounded p-3' style='background-color: #B3B3B3;'>" +
         "<div class='row align-items-center'>" +
-          "<div class='col-2 border-right text-center'><strong>Poster:</strong> <img src='" + (details.Poster || 'N/A') + "' alt='Poster' class='img-fluid'></div>" +
+          "<div class='col-3 border-right text-center'> <img src='" + (details.Poster || 'N/A') + "' alt='Poster' class='img-fluid'></div>" +
           "<div class='col-1 border-right text-center'><strong>Bewertung:</strong> <span class='text-warning font-weight-bold'>" + (details.imdbRating || 'N/A') + "</span> " + starRating + "</div>" +
           "<div class='col-1 border-right text-center'><strong>Deine Bewertung:</strong> " + userStarRating + "</div>" +
           "<div class='col-md-3 border-right'><strong>Plot:</strong> <textarea class='form-control' rows='5' readonly style='background-color: #fff; font-weight: bold;'>" + (details.Plot || 'N/A') + "</textarea></div>" +
           "<div class='col-2 border-right text-center'><strong>Genre:</strong> " + generateGenreBadges(details.Genre) + "</div>" +
-          "<div class='col-2 border-right text-center'><strong>Year:</strong> " + generateYearBadges(details.Year) + "</div>" +
-          "<div class='col-2 border-right'><strong>Titel:</strong> <span class='text-primary font-weight-bold'>" + (details.Title || 'N/A') + "</span></div>" +
+          "<div class='col-2 text-center'><strong>Year:</strong> " + generateYearBadges(details.Year) + "</div>" +
+          "<div class='col-2 left '><strong>Titel:</strong> <span class='text-primary font-weight-bold'>" + (details.Title || 'N/A') + "</span></div>" +
           "<div class='col-1 text-center'><button class='btn btn-danger btn-sm mt-2' onclick='removeFromFavorites(\"" + imdbID + "\")'>Entfernen</button></div>" +
           "<div class='col-12'>" + starRatingInput + "</div>" +
         "</div>" +
       "</li>";
+
+      function generateStarRatingOptions() {
+  let options = '';
+  for (let i = 1; i <= 10; i++) {
+    options += '<option value="' + i + '">' + i + ' Sterne</option>';
+  }
+  return options;
+}
   
 function generateGenreBadges(genre) {
   if (!genre) return 'N/A';
 
   var genreArray = genre.split(', ');
-  var badges = genreArray.map(function (genreItem) {
-    return "<span class='badge bg-primary mr-1'>" + genreItem + "</span>";
+
+  var genreColors = {
+    'Action': 'bg-primary',
+    'Adventure': 'bg-success',
+    'Animation': 'bg-info',
+    'Biography': 'bg-warning',
+    'Comedy': 'bg-danger',
+    'Crime': 'bg-secondary',
+    'Documentary': 'bg-dark',
+    'Drama': 'bg-primary',
+    'Family': 'bg-success',
+    'Fantasy': 'bg-info',
+    'Film-Noir': 'bg-warning',
+    'History': 'bg-danger',
+    'Horror': 'bg-secondary',
+    'Music': 'bg-dark',
+    'Musical': 'bg-primary',
+    'Mystery': 'bg-success',
+    'Romance': 'bg-info',
+    'Sci-Fi': 'bg-warning',
+    'Sport': 'bg-danger',
+    'Thriller': 'bg-secondary',
+    'War': 'bg-dark',
+    'Western': 'bg-primary'
+  };
+
+  var badges = genreArray.map(genreItem => {
+    var colorClass = genreColors[genreItem] || 'bg-primary';
+    return `<span class='badge ${colorClass} mb-1'>${genreItem}</span>`;
   });
 
   return badges.join('');
 }
+
+
 
 function generateYearBadges(year) {
   if (!year) return 'N/A';
@@ -361,6 +395,7 @@ function submitUserRating(imdbID) {
   saveUserRating(imdbID, userStarRating);
 
   $("#myModal").modal("hide");
+  showFavorites();
 }
 
 function saveUserRating(imdbID, rating) {
