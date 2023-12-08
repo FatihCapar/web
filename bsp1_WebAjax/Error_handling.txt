@@ -1,4 +1,3 @@
-Könntest du mir Schritt für Schritt alles erklären, was ich machen muss, wenn ich das Api key als Login Parameter verlangen will ?Also Ohne den Api soll nichts funktionieren und man muss sich mit dem Api key sozusagen einloggen sollen. Der APi Key soll folgendermaßen: überprüfft werden: Wenn der Schlüssel auf der folgenden Webseite Daten bekommt soll. Man sie verwenden können:
 var dataFound = 0;
 var dataPerPage = 10;
 var favoriteMovies = [];
@@ -464,7 +463,6 @@ function resetAllRatings() {
 
 
 html:
-so sieht mein html code aus:
 <!DOCTYPE html>
 <html lang="de">
 <head>
