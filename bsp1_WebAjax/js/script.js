@@ -28,15 +28,7 @@ function showResults() {
   var endIndex = startIndex + dataPerPage;
   var resultsToDisplay = searchResults.slice(startIndex, endIndex);
 
-  console.log("currentPage:", currentPage);
-  console.log("totalResults:", totalResults);
-  console.log("startIndex:", startIndex);
-  console.log("endIndex:", endIndex);
-  console.log("resultsToDisplay:", resultsToDisplay);
-
-  console.log("Before split_jason call");
   split_jason(resultsToDisplay);
-  console.log("After split_jason call");
 }
 
 async function nextPage() {
@@ -46,7 +38,6 @@ async function nextPage() {
           return;
       }
       currentPage++;
-      console.log("Going to next page. New currentPage:", currentPage);
       await loadResultsPage(currentPage);
       showResults();
   }
@@ -57,7 +48,6 @@ async function loadResultsPage(page) {
   var search = $("#search").val();
   if (search != null || search != "") {
       try {
-          console.log("Loading results for page:", page);
           if (!apiKey) {
               alert("Bitte geben Sie einen gültigen API-Schlüssel ein.");
               return;
@@ -66,7 +56,6 @@ async function loadResultsPage(page) {
               url: "http://www.omdbapi.com/?s=" + search + "&r=json&apikey=" + apiKey + "&page=" + page,
               dataType: 'json'
           });
-          console.log("API response:", response);
           if (response.hasOwnProperty("Response") && response.Response == "True") {
               totalResults = parseInt(response.totalResults) || 0;
               searchResults = searchResults.concat(response.Search || []);
@@ -83,7 +72,6 @@ async function loadResultsPage(page) {
 function prevPage() {
   if (currentPage > 1) {
     currentPage--;
-    console.log("Going to previous page. New currentPage:", currentPage);
     showResults();
   }
 }
@@ -124,8 +112,6 @@ function get_movie_result() {
 }
 
 async function split_jason(myArray) {
-  console.log("split_jason function called");
-  console.log("myArray:", myArray);
   if (check_Array(myArray)) {
     $("#movieresult tbody").empty();
     for (var x = 0; x < myArray.length; x++) {
