@@ -276,7 +276,7 @@ function showFavorites() {
           "<div class='col-3 border-right text-center'> <img src='" + (details.Poster || 'N/A') + "' alt='Poster' class='img-fluid'></div>" +
           "<div class='col-1 border-right text-center'><strong>Bewertung:</strong> <span class='text-warning font-weight-bold'>" + (details.imdbRating || 'N/A') + "</span> " + starRating + "</div>" +
           "<div class='col-1 border-right text-center'><strong>Deine Bewertung:</strong> " + userStarRating + "</div>" +
-          "<div class='col-md-3 border-right'><strong>Plot:</strong> <textarea class='form-control' rows='5' readonly style='background-color: #fff; font-weight: bold;'>" + (details.Plot || 'N/A') + "</textarea></div>" +
+          "<div class='col-md-3 border-right'><strong>Inhalt:</strong> <textarea class='form-control' rows='5' readonly style='background-color: #fff; font-weight: bold;'>" + (details.Plot || 'N/A') + "</textarea></div>" +
           "<div class='col-2 border-right text-center'><strong>Genre:</strong> " + generateGenreBadges(details.Genre) + "</div>" +
           "<div class='col-2 text-center'><strong>Year:</strong> " + generateYearBadges(details.Year) + "</div>" +
           "<div class='col-2 left '><strong>Titel:</strong> <span class='text-primary font-weight-bold'>" + (details.Title || 'N/A') + "</span></div>" +
