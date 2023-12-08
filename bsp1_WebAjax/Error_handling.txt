@@ -323,13 +323,7 @@ function generateYearBadges(year) {
   });
 
   return badges.join('');
-}
-
-
-
-
-
-    
+}   
 
       $("#favoritesList").append(listItem);
     }
@@ -406,44 +400,6 @@ function resetAllRatings() {
   showFavorites(); // Aktualisieren der Anzeige der favorisierten Filme
   alert("Alle Bewertungen zurückgesetzt!");
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
