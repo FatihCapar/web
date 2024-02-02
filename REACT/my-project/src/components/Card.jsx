@@ -12,7 +12,7 @@ export default  function Card ({name, title, imageUri}) {
             <h2 className='font bold text-xl'>{name}</h2>
             <h4>{title}</h4>
             </div>
-            <div className='bg-green-400 w-full'>
+            <div className=''>
                 <img src={imageUri} alt='' className='object-cover w-full h-full'/>
                 
         </div>
