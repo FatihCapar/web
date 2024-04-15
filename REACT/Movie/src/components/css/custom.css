@@ -1,0 +1,90 @@
+/* Custom CSS */
+
+.modal-xl {
+    max-width: 70%;
+}
+#movieresult {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+#movieresult th, #movieresult td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+}
+
+#movieresult thead tr {
+    background-color: #5c15a2;
+    color: #fff;
+}
+
+#movieresult tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+.close {
+    color: #007bff;
+}
+#search {
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.btn-search {
+    border-radius: 5px;
+    margin-left: 10px;
+}
+.btn-favorites {
+    border-radius: 5px;
+    margin-left: 10px;
+    background-color: #28a745;
+    color: #fff;
+}
+#favoritesList img {
+    max-width: 50%; 
+    max-height: 50%; 
+}
+
+.modal-content {
+    border: none !important;
+}
+
+#favoritesModal .modal-content {
+    background-color: #a8a8a8;
+}
+
+#favoritesList li {
+    background-color: #8c9287;
+}
+.badge {
+    font-weight: bold;
+}
+
+
+
+
+
+
+
+/*Body
+ERgebnis bis LIste kleines Feld */
+.modal-content{
+    background-color: #2f495e;
+
+}
+
+/*Ergebnis kann ich vermutlich löschen*/
+.modal-header{
+
+}
+/*helles BLau innderhalb der Tabelle =Ergebnisse*/
+.table{
+    background-color: #9babb9;
+}
+.modal-dialog modal-lg{
+    
+    padding-top: 200px;
+}
+
+{background-color: #2f495e}
