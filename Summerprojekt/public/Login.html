@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Externe CSS-Datei für das Styling -->
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form id="login-form">
+            <label for="username">Benutzername:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Passwort:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit" id="login-btn">Anmelden</button>
+        </form>
+        <div id="error-message" style="display: none; color: red;"></div>
+        <div id="timer" style="display: none; color: red;">
+            Bitte warten Sie <span id="countdown">0</span> Sekunden, bevor Sie es erneut versuchen.
+        </div>
+    </div>
+    <script src="script.js"></script> <!-- Externe JavaScript-Datei für die Funktionalität -->
+</body>
+</html>
