@@ -30,7 +30,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
-  const query = 'SELECT * FROM test1 WHERE username = ? AND password = ?';
+  const query = 'SELECT * FROM test2 WHERE username = ? AND password = ?';
   connection.query(query, [username, password], (error, results) => {
     if (error) {
       console.error('Fehler bei der Abfrage:', error);
