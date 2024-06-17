@@ -1,27 +1,20 @@
+// src/Login.jsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useCurrentUser } from './UserContext';
 import './Login.css';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [timer, setTimer] = useState(0);
-  const [failedAttempts, setFailedAttempts] = useState(0);
-  const [waiting, setWaiting] = useState(false);
-
   const navigate = useNavigate();
+  const { setCurrentUser } = useCurrentUser();
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (waiting) {
-      return;
-    }
-
-    const requiredWaitTime = Math.pow(2, failedAttempts) * 1000;
-
-    fetch('/login', {
+    fetch('http://localhost:3001/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -31,32 +24,17 @@ function Login() {
     .then(response => response.json())
     .then(data => {
       if (data.success) {
-        navigate('/dashboard'); // Hier wird der Benutzer auf die Dashboard-Route weitergeleitet
+        localStorage.setItem('token', data.token); // Token im lokalen Speicher speichern
+        setCurrentUser({ ...data.user, token: data.token });
+        navigate(data.redirectUrl);
       } else {
         setErrorMessage(data.message);
-        setFailedAttempts(failedAttempts + 1);
-        showCountdown(requiredWaitTime / 1000);
       }
     })
     .catch(error => {
       console.error('Fehler:', error);
       setErrorMessage('Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.');
     });
-  };
-
-  const showCountdown = (seconds) => {
-    setWaiting(true);
-    setTimer(seconds);
-
-    const interval = setInterval(() => {
-      seconds -= 1;
-      setTimer(seconds);
-
-      if (seconds <= 0) {
-        clearInterval(interval);
-        setWaiting(false);
-      }
-    }, 1000);
   };
 
   return (
@@ -81,10 +59,9 @@ function Login() {
             required
           />
         </label>
-        <button type="submit" disabled={waiting}>Anmelden</button>
+        <button type="submit">Anmelden</button>
       </form>
       {errorMessage && <div className="error-message">{errorMessage}</div>}
-      {waiting && <div className="timer">Bitte warten Sie {timer} Sekunden, bevor Sie es erneut versuchen.</div>}
     </div>
   );
 }

@@ -5,7 +5,14 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/login': 'http://localhost:3001'
+      '/login': 'http://localhost:3001',
+      '/createTask': 'http://localhost:3001',
+      '/tasks': 'http://localhost:3001',
+      '/comments': 'http://localhost:3001',
+      '/comments/:taskId': 'http://localhost:3001',
+      '/projects': 'http://localhost:3001',
+      '/categories': 'http://localhost:3001',
+      '/users': 'http://localhost:3001',
     }
   }
 });
