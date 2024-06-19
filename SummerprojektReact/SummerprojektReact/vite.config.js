@@ -10,8 +10,6 @@ export default defineConfig({
       '/tasks': 'http://localhost:3001',
       '/comments': 'http://localhost:3001',
       '/comments/:taskId': 'http://localhost:3001',
-      '/projects': 'http://localhost:3001',
-      '/categories': 'http://localhost:3001',
       '/users': 'http://localhost:3001',
     }
   }

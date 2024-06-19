@@ -26,12 +26,6 @@ const Layout = () => {
         <Link to="/tasks">
           <button>Aufgaben anzeigen</button>
         </Link>
-        <Link to="/projects">
-          <button>Projekte anzeigen</button>
-        </Link>
-        <Link to="/categories">
-          <button>Kategorien anzeigen</button>
-        </Link>
       </div>
       <div className={`content ${isCollapsed ? 'collapsed' : ''}`}>
         <Outlet />
